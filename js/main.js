@@ -1,8 +1,8 @@
 function checkStringLength(str, maxLength) {
-  return str.length <= maxLength ? true : false;
+  return str.length <= maxLength;
 }
 
-// alert(checkStringLength('Привет!', 6));
+// alert(checkStringLength('Привет!', 1));
 
 function getRandomInteger(a, b) {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
@@ -21,46 +21,44 @@ const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-// function compareNumbers(a, b) {
-//   return a - b;
-// }
+const NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
+const SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 
-// const getUniqueNumber = () => {
-//   const array = [];
-//   let i = 0;
-//   while (i <= 24) {
-//     const j = getRandomInteger(1, 25);
-//     if (array.includes(j)) {
-//       continue;
-//     }
-//     array[i] = j;
-//     i++;
-//   }
-//   return array.sort(compareNumbers);
-// };
+function makeCounter() {
+  let currentCount = 1;
 
-const array = [];
-const addElementToArray = () => {
-  const id = 1;
-  const count = array.push(id);
-  return count;
+  return function () {
+    return currentCount++;
+  };
+}
+
+const counterId = makeCounter(); // (*)
+const counterUrl = makeCounter();
+const counterIdComment = makeCounter();
+
+const getRandomArrayElement = function (elements) {
+  return elements[getRandomInteger(0, elements.length - 1)];
 };
 
-const createImage = () => ({
-  id: addElementToArray(),
-  description: 'Описание придумайте самостоятельно.',
-  likes: getRandomInteger(15, 200),
-});
+const createComment = function () {
+  return {
+    id: counterIdComment(),
+    avatar: 'img/avatar-' + getRandomInteger(1, 6) + '.svg',
+    message: getRandomArrayElement(MESSAGES),
+    name: getRandomArrayElement(NAMES) + ' ' + getRandomArrayElement(SURNAMES),
+  };
+};
+
+const createImage = function () {
+  return {
+    id: counterId(),
+    url: 'photos/' + counterUrl(),
+    description: 'Описание придумайте самостоятельно.',
+    likes: getRandomInteger(15, 200),
+    comments: Array.from({ length: getRandomInteger(0, 10) }, createComment),
+  };
+};
 
 const createImagesList = Array.from({ length: 25 }, createImage);
 
 console.log(createImagesList);
-
-const object1 = {
-  a: 'somestring',
-  b: 42,
-};
-
-for (const key in object1) {
-  console.log(object1[key]);
-}
